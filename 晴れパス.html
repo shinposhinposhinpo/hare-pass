@@ -1,0 +1,882 @@
+<title>晴れパス</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap">
+<style>
+  :root{
+    --bg:#eaf3fb;
+    --bg-deep:#dcebf7;
+    --surface:#ffffff;
+    --surface-alt:#fff6e2;
+    --ink:#16283b;
+    --ink-soft:#52697e;
+    --ink-faint:#8ba0b3;
+    --sun:#e8a33d;
+    --sun-deep:#b97a1e;
+    --sun-ghost:#f7dfb2;
+    --rain:#7c8fa6;
+    --rain-ghost:#c7d3de;
+    --line:#d3e0eb;
+    --good:#3f8f5f;
+    --good-ghost:#d9ecdf;
+    --brick:#c1573a;
+    --shadow: 0 1.5px 0 rgba(22,40,59,.04), 0 18px 40px -20px rgba(22,40,59,.35);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0d1826;
+      --bg-deep:#0a121d;
+      --surface:#16283b;
+      --surface-alt:#2a2113;
+      --ink:#eaf2fa;
+      --ink-soft:#a3b7c9;
+      --ink-faint:#6d829a;
+      --sun:#f0b255;
+      --sun-deep:#f6cd85;
+      --sun-ghost:#4a3a1e;
+      --rain:#93a6ba;
+      --rain-ghost:#26384c;
+      --line:#27384a;
+      --good:#5fbf86;
+      --good-ghost:#1c3327;
+      --brick:#e08066;
+      --shadow: 0 1.5px 0 rgba(0,0,0,.3), 0 18px 40px -20px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d1826;
+    --bg-deep:#0a121d;
+    --surface:#16283b;
+    --surface-alt:#2a2113;
+    --ink:#eaf2fa;
+    --ink-soft:#a3b7c9;
+    --ink-faint:#6d829a;
+    --sun:#f0b255;
+    --sun-deep:#f6cd85;
+    --sun-ghost:#4a3a1e;
+    --rain:#93a6ba;
+    --rain-ghost:#26384c;
+    --line:#27384a;
+    --good:#5fbf86;
+    --good-ghost:#1c3327;
+    --brick:#e08066;
+    --shadow: 0 1.5px 0 rgba(0,0,0,.3), 0 18px 40px -20px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 560px at 82% -10%, color-mix(in srgb, var(--sun) 20%, transparent), transparent 60%),
+      radial-gradient(900px 520px at 8% 105%, color-mix(in srgb, var(--rain) 16%, transparent), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
+    padding-inline:16px;
+    padding-block:36px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:28px;
+  }
+
+  .masthead{
+    width:100%;
+    max-width:920px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:28px;
+    align-items:flex-end;
+    justify-content:space-between;
+  }
+  .masthead h1{
+    font-family:"Shippori Mincho B1", serif;
+    font-weight:800;
+    font-size:clamp(28px,4.4vw,40px);
+    letter-spacing:.04em;
+    margin:0 0 6px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  .masthead .kicker{
+    font-family:"Space Mono", monospace;
+    font-size:11px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--sun-deep);
+    margin:0 0 10px;
+  }
+  .masthead p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:14.5px;
+    max-width:46ch;
+    line-height:1.7;
+  }
+  .masthead .stats{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .stat-chip{
+    font-family:"Space Mono", monospace;
+    font-size:11.5px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:7px 13px;
+    color:var(--ink-soft);
+    box-shadow:var(--shadow);
+    white-space:nowrap;
+  }
+  .stat-chip b{ color:var(--ink); font-weight:700; }
+
+  .stage{
+    display:flex;
+    gap:34px;
+    align-items:flex-start;
+    justify-content:center;
+    flex-wrap:wrap;
+    width:100%;
+    max-width:920px;
+  }
+
+  /* ---- phone shell ---- */
+  .phone{
+    width:min(388px, 92vw);
+    height:min(792px, 88vh);
+    min-height:640px;
+    background:var(--surface);
+    border-radius:46px;
+    padding:14px;
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--ink) 10%, transparent),
+      var(--shadow);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    flex-shrink:0;
+  }
+  .phone-inner{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    background:var(--bg-deep);
+    border-radius:34px;
+    overflow:hidden;
+    position:relative;
+    border:1px solid var(--line);
+  }
+  .notch{
+    position:absolute;
+    top:10px; left:50%; transform:translateX(-50%);
+    width:112px; height:26px;
+    background:var(--ink);
+    border-radius:14px;
+    z-index:5;
+  }
+  .statusbar{
+    height:46px;
+    flex:0 0 auto;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    padding:0 26px 6px;
+    font-family:"Space Mono", monospace;
+    font-size:12.5px;
+    color:var(--ink);
+  }
+  .statusbar .icons{ display:flex; gap:5px; align-items:center; }
+
+  .screen{
+    flex:1;
+    overflow-y:auto;
+    padding:6px 18px 22px;
+    scrollbar-width:none;
+  }
+  .screen::-webkit-scrollbar{ display:none; }
+  .screen{ display:none; }
+  .screen.active{ display:block; animation:rise .38s ease both; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce){
+    .screen.active{ animation:none; }
+  }
+
+  .tabbar{
+    flex:0 0 64px;
+    display:flex;
+    border-top:1px solid var(--line);
+    background:var(--surface);
+  }
+  .tab{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    background:none;
+    border:none;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:10.5px;
+    color:var(--ink-faint);
+    cursor:pointer;
+    padding:6px 2px 10px;
+  }
+  .tab svg{ width:21px; height:21px; }
+  .tab[aria-selected="true"]{ color:var(--sun-deep); }
+  .tab:focus-visible{ outline:2px solid var(--sun); outline-offset:-2px; border-radius:8px; }
+
+  h2.screen-title{
+    font-family:"Shippori Mincho B1", serif;
+    font-weight:700;
+    font-size:20px;
+    margin:14px 0 4px;
+    color:var(--ink);
+  }
+  .screen-sub{
+    margin:0 0 16px;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    line-height:1.6;
+  }
+
+  /* ---- weather compare ---- */
+  .wx-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-bottom:14px;
+  }
+  .wx-card{
+    border-radius:16px;
+    padding:12px 12px 11px;
+    border:1px solid var(--line);
+  }
+  .wx-card.is-rain{ background:var(--rain-ghost); }
+  .wx-card.is-sun{ background:var(--sun-ghost); }
+  .wx-card .wx-loc{ font-size:10.5px; color:var(--ink-soft); margin-bottom:6px; }
+  .wx-card .wx-main{ display:flex; align-items:center; gap:6px; }
+  .wx-card svg{ width:26px; height:26px; flex:0 0 auto; }
+  .wx-card .wx-temp{ font-family:"Space Mono",monospace; font-weight:700; font-size:19px; }
+  .wx-card .wx-label{ font-size:11px; color:var(--ink-soft); margin-top:2px; }
+
+  .wx-source{
+    font-family:"Space Mono", monospace;
+    font-size:10px;
+    color:var(--ink-faint);
+    margin:-6px 0 14px;
+    text-align:right;
+  }
+
+  .banner{
+    background:linear-gradient(155deg, var(--sun-ghost), var(--surface) 62%);
+    border:1px solid var(--sun-ghost);
+    border-radius:20px;
+    padding:18px 18px 16px;
+    margin-bottom:16px;
+  }
+  .banner .headline{
+    font-family:"Shippori Mincho B1", serif;
+    font-weight:800;
+    font-size:22px;
+    line-height:1.35;
+    margin:0 0 6px;
+  }
+  .banner .sub{ font-size:12px; color:var(--ink-soft); margin:0 0 14px; }
+  .price-row{ display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
+  .price-now{ font-family:"Space Mono",monospace; font-weight:700; font-size:24px; color:var(--sun-deep); }
+  .price-was{ font-family:"Space Mono",monospace; font-size:13px; color:var(--ink-faint); text-decoration:line-through; }
+  .price-tag{
+    font-family:"Space Mono",monospace;
+    font-size:10.5px;
+    background:var(--brick);
+    color:#fff8f1;
+    padding:2px 8px;
+    border-radius:100px;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    width:100%;
+    padding:12px 16px;
+    border-radius:100px;
+    border:none;
+    background:var(--ink);
+    color:var(--bg);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-weight:700;
+    font-size:13.5px;
+    cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .btn:active{ transform:scale(.97); }
+  .btn.ghost{
+    background:transparent;
+    color:var(--ink);
+    border:1.5px solid var(--line);
+  }
+  .btn.small{ width:auto; padding:8px 16px; font-size:12px; }
+  .btn:focus-visible{ outline:2px solid var(--sun-deep); outline-offset:2px; }
+
+  .section-label{
+    font-family:"Space Mono", monospace;
+    font-size:10.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:18px 0 9px;
+  }
+
+  .route-preview{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .route-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:13px 14px;
+    text-align:left;
+    cursor:pointer;
+    font-family:inherit;
+    color:inherit;
+  }
+  .route-card .rc-top{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:5px;}
+  .route-card .rc-name{ font-weight:700; font-size:13.5px; }
+  .route-card .rc-price{ font-family:"Space Mono",monospace; font-size:12px; color:var(--sun-deep); font-weight:700; }
+  .route-card .rc-path{ font-size:11.5px; color:var(--ink-soft); line-height:1.5; }
+
+  .fine{ font-size:10.5px; color:var(--ink-faint); margin-top:16px; line-height:1.6; }
+
+  /* ---- ticket (pass tab) ---- */
+  .ticket{
+    background:var(--surface);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    margin-bottom:18px;
+    border:1px solid var(--line);
+  }
+  .ticket-top{
+    padding:16px 18px 14px;
+    background:linear-gradient(150deg, var(--sun-ghost), transparent 70%);
+  }
+  .ticket-route{ font-family:"Shippori Mincho B1", serif; font-weight:700; font-size:17px; margin:0 0 3px; }
+  .ticket-holder{ font-size:11.5px; color:var(--ink-soft); }
+  .ticket-modes{ display:flex; gap:8px; margin-top:12px; }
+  .mode-pill{
+    display:flex; align-items:center; gap:5px;
+    background:var(--surface); border:1px solid var(--line);
+    border-radius:100px; padding:5px 10px 5px 8px;
+    font-size:10.5px; color:var(--ink-soft);
+  }
+  .mode-pill svg{ width:14px; height:14px; }
+  .perforation{
+    position:relative;
+    height:0;
+    border-top:2px dashed var(--line);
+    margin:0 18px;
+  }
+  .perforation::before, .perforation::after{
+    content:"";
+    position:absolute; top:-9px;
+    width:18px; height:18px;
+    background:var(--bg-deep);
+    border-radius:50%;
+  }
+  .perforation::before{ left:-27px; }
+  .perforation::after{ right:-27px; }
+  .ticket-bottom{ padding:16px 18px 18px; display:flex; gap:16px; align-items:center; }
+  .qr{
+    flex:0 0 auto;
+    width:88px; height:88px;
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    grid-template-rows:repeat(9,1fr);
+    background:#fff;
+    border-radius:8px;
+    padding:6px;
+    gap:1px;
+  }
+  .qr i{ background:transparent; border-radius:1px; }
+  .qr i.on{ background:#16283b; }
+  .ticket-meta{ flex:1; }
+  .ticket-meta .tm-row{ display:flex; justify-content:space-between; font-size:11.5px; padding:3px 0; border-bottom:1px dotted var(--line); }
+  .ticket-meta .tm-row:last-child{ border-bottom:none; }
+  .ticket-meta .tm-label{ color:var(--ink-soft); }
+  .ticket-meta .tm-value{ font-family:"Space Mono",monospace; font-weight:700; }
+
+  .stamp{
+    position:absolute;
+    top:14px; right:16px;
+    width:64px; height:64px;
+    border:2px solid var(--good);
+    border-radius:50%;
+    color:var(--good);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    font-family:"Shippori Mincho B1", serif;
+    font-weight:700;
+    font-size:10px;
+    line-height:1.25;
+    transform:rotate(-14deg);
+    background:color-mix(in srgb, var(--good) 6%, transparent);
+  }
+  .ticket-top{ position:relative; }
+
+  .itinerary{ margin-top:0; }
+  .itin-row{ display:flex; gap:10px; padding:9px 0; }
+  .itin-row .itin-time{ font-family:"Space Mono",monospace; font-size:11.5px; width:42px; flex:0 0 auto; color:var(--ink-soft); padding-top:1px;}
+  .itin-line{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; width:16px; }
+  .itin-dot{ width:9px; height:9px; border-radius:50%; background:var(--sun-deep); flex:0 0 auto; margin-top:3px; }
+  .itin-row:last-child .itin-stem{ display:none; }
+  .itin-stem{ width:1.5px; flex:1; background:var(--line); margin-top:2px; }
+  .itin-body{ padding-top:0; }
+  .itin-stop{ font-weight:700; font-size:12.5px; }
+  .itin-note{ font-size:11px; color:var(--ink-soft); margin-top:1px; }
+
+  /* ---- routes tab ---- */
+  .route-full{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:15px 16px 16px;
+    margin-bottom:14px;
+  }
+  .route-full .rf-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
+  .route-full .rf-name{ font-family:"Shippori Mincho B1", serif; font-weight:700; font-size:15.5px; }
+  .route-full .rf-tag{ font-size:10.5px; color:var(--ink-soft); margin-top:2px; }
+  .route-full .rf-price{ font-family:"Space Mono",monospace; font-weight:700; color:var(--sun-deep); font-size:13.5px; white-space:nowrap; }
+  .ar-strip{ display:flex; gap:6px; margin:10px 0 12px; flex-wrap:wrap; }
+  .ar-chip{
+    font-family:"Space Mono",monospace;
+    font-size:9.5px;
+    background:var(--good-ghost);
+    color:var(--good);
+    padding:4px 8px;
+    border-radius:100px;
+    display:flex; align-items:center; gap:4px;
+  }
+  .ar-chip svg{ width:11px; height:11px; }
+
+  /* ---- workshop tab ---- */
+  .ws-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:14px 15px 15px;
+    margin-bottom:12px;
+  }
+  .ws-top{ display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
+  .ws-name{ font-weight:700; font-size:13.5px; margin-bottom:3px; }
+  .ws-when{ font-family:"Space Mono",monospace; font-size:11px; color:var(--ink-soft); }
+  .ws-desc{ font-size:11.5px; color:var(--ink-soft); line-height:1.6; margin:8px 0 11px; }
+  .ws-foot{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .ws-demand{ font-family:"Space Mono",monospace; font-size:10px; color:var(--good); }
+
+  .demand-banner{
+    background:var(--good-ghost);
+    border-radius:14px;
+    padding:11px 13px;
+    font-size:11.5px;
+    color:var(--ink);
+    margin-bottom:14px;
+    display:flex; gap:8px; align-items:flex-start;
+  }
+  .demand-banner svg{ flex:0 0 auto; width:16px; height:16px; margin-top:1px; color:var(--good); }
+  .demand-banner b{ font-family:"Space Mono",monospace; }
+
+  @media (max-width: 560px){
+    .masthead{ justify-content:flex-start; }
+  }
+</style>
+
+<div class="masthead">
+  <div>
+    <p class="kicker">Weather-linked digital touring pass — prototype</p>
+    <h1>晴れパス</h1>
+    <p>気象データ・交通機関・入園券を1枚に束ねるデジタル周遊パスのプロトタイプです。周辺府県が雨予報の日、岡山の遊園地への「駆け込み集客」を狙う仕組みを、実際の操作感で確認できます。サンプルデータで動作するデモ画面です。</p>
+  </div>
+  <div class="stats">
+    <span class="stat-chip">降水量1mm未満 <b>276.7日/年</b></span>
+    <span class="stat-chip">県外客 <b>7割</b></span>
+    <span class="stat-chip">WS参加意向 <b>91.3%</b></span>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="phone">
+    <div class="phone-inner">
+      <div class="notch"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="icons">
+          <svg viewBox="0 0 16 12" fill="none"><path d="M1 9L1 11M5 6L5 11M9 3L9 11M13 1L13 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 20 12" fill="none"><rect x="1" y="1.5" width="16" height="9" rx="2.2" stroke="currentColor" stroke-width="1.3"/><rect x="18" y="4" width="1.6" height="4" rx="0.6" fill="currentColor"/><rect x="2.5" y="3" width="10" height="6" rx="1" fill="currentColor"/></svg>
+        </span>
+      </div>
+
+      <!-- ============ HOME ============ -->
+      <section class="screen active" id="screen-home">
+        <h2 class="screen-title">今日、雨だから岡山。</h2>
+        <p class="screen-sub">天気予報を遊園地の入場券に変えるデジタルパス</p>
+
+        <div class="wx-row">
+          <div class="wx-card is-rain" id="wx-ref-card">
+            <div class="wx-loc" id="wx-ref-loc">近隣府県（大阪・広島など）</div>
+            <div class="wx-main">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--rain)" id="wx-ref-icon"><path d="M7 15a4 4 0 0 1 .5-7.97A5.5 5.5 0 0 1 18 9.5a3.5 3.5 0 0 1-.7 6.93" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 18v2M12 18v3M16 18v2" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <span class="wx-temp" id="wx-ref-temp">18℃</span>
+            </div>
+            <div class="wx-label" id="wx-ref-label">☔ 雨予報</div>
+          </div>
+          <div class="wx-card is-sun" id="wx-oka-card">
+            <div class="wx-loc" id="wx-oka-loc">岡山（晴れの国）</div>
+            <div class="wx-main">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--sun-deep)" id="wx-oka-icon"><circle cx="12" cy="12" r="4.6" stroke-width="1.6"/><path d="M12 2.5v2.6M12 18.9v2.6M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.2 19.8L6 18M18 6l1.8-1.8" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <span class="wx-temp" id="wx-oka-temp">27℃</span>
+            </div>
+            <div class="wx-label" id="wx-oka-label">☀ 快晴</div>
+          </div>
+        </div>
+        <p class="wx-source" id="wx-source">※サンプル表示（気象データ未取得）</p>
+
+        <div class="banner">
+          <p class="headline" id="banner-headline">気象連動タイムセール<br>本日開催中</p>
+          <p class="sub" id="banner-sub">近隣府県の悪天候を検知し、動的割引を自動発行しています（サンプル表示）</p>
+          <div class="price-row">
+            <span class="price-now" id="banner-price-now">¥6,000〜</span>
+            <span class="price-was" id="banner-price-was">¥9,000</span>
+            <span class="price-tag" id="banner-price-tag">-33%</span>
+          </div>
+          <button class="btn" onclick="showScreen('pass')">
+            デジタルパスを見る
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor"><path d="M6 3l5 5-5 5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="section-label">周遊ルートを選ぶ</div>
+        <div class="route-preview" id="home-route-list"></div>
+
+        <p class="fine">※天気は気象庁（jma.go.jp）発表データの実測値です（下部に取得時点を表示）。継続的な自動更新ではなく、時点のスナップショットです。デジタルパスの価格・在庫・購入導線はビジネスプラン検証用のサンプルで、実際の販売を行うものではありません。</p>
+      </section>
+
+      <!-- ============ PASS ============ -->
+      <section class="screen" id="screen-pass">
+        <h2 class="screen-title">マイパス</h2>
+        <p class="screen-sub">JR・路線バス・入園券を1枚のQRに集約</p>
+
+        <div class="ticket">
+          <div class="ticket-top">
+            <div class="stamp">雨天<br>保証</div>
+            <p class="ticket-route" id="ticket-route-name">県南日帰り/1泊コース</p>
+            <p class="ticket-holder">岡山 花子 様 ／ 有効期限：2026年10月18日</p>
+            <div class="ticket-modes">
+              <span class="mode-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="3" width="14" height="14" rx="3" stroke-width="1.6"/><path d="M5 13h14M9 21l1.5-4M15 21l-1.5-4M8 7h8" stroke-width="1.6" stroke-linecap="round"/></svg>
+                JR
+              </span>
+              <span class="mode-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="12" rx="3" stroke-width="1.6"/><circle cx="7.5" cy="17" r="1.6" fill="currentColor" stroke="none"/><circle cx="16.5" cy="17" r="1.6" fill="currentColor" stroke="none"/><path d="M3 10h18" stroke-width="1.6"/></svg>
+                バス
+              </span>
+              <span class="mode-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v4a3 3 0 0 0 0 6v4H4v-4a3 3 0 0 0 0-6V6z" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                入園券
+              </span>
+            </div>
+          </div>
+          <div class="perforation"></div>
+          <div class="ticket-bottom">
+            <div class="qr" id="qr-grid"></div>
+            <div class="ticket-meta">
+              <div class="tm-row"><span class="tm-label">パス番号</span><span class="tm-value">HP-2026-0417</span></div>
+              <div class="tm-row"><span class="tm-label">お支払額</span><span class="tm-value" id="ticket-price">¥6,000</span></div>
+              <div class="tm-row"><span class="tm-label">購入手数料</span><span class="tm-value">込み</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-label">当日の行程</div>
+        <div class="itinerary" id="ticket-itinerary"></div>
+
+        <button class="btn ghost" style="margin-top:14px;" onclick="showScreen('routes')">別のルートに変更する</button>
+      </section>
+
+      <!-- ============ ROUTES ============ -->
+      <section class="screen" id="screen-routes">
+        <h2 class="screen-title">周遊ルート</h2>
+        <p class="screen-sub">公共交通機関だけで、岡山の遊園地を巡る2コース</p>
+        <div id="route-full-list"></div>
+      </section>
+
+      <!-- ============ WORKSHOP ============ -->
+      <section class="screen" id="screen-workshop">
+        <h2 class="screen-title">まなびワークショップ</h2>
+        <p class="screen-sub">高校生が地元企業・専門家と企画する園内プログラム</p>
+
+        <div class="demand-banner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7.5-4.6-9.5-9A5.5 5.5 0 0 1 12 6.4 5.5 5.5 0 0 1 21.5 12c-2 4.4-9.5 9-9.5 9z" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span>来場者調査で <b>91.3%</b> が「子どもを参加させたい」と回答したプログラムです</span>
+        </div>
+
+        <div id="ws-list"></div>
+      </section>
+
+      <div class="tabbar" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-tab="home" onclick="showScreen('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11.5 12 4l8 7.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9h12v-9" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          ホーム
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="pass" onclick="showScreen('pass')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v4a3 3 0 0 0 0 6v4H4v-4a3 3 0 0 0 0-6V6z" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          パス
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="routes" onclick="showScreen('routes')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="2.2" stroke-width="1.8"/><circle cx="18" cy="18" r="2.2" stroke-width="1.8"/><path d="M6 8.2v3A4 4 0 0 0 10 15h4a4 4 0 0 1 4 4v-1" stroke-width="1.8" stroke-linecap="round"/></svg>
+          ルート
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="workshop" onclick="showScreen('workshop')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3 3 8l9 5 9-5-9-5z" stroke-width="1.8" stroke-linejoin="round"/><path d="M6.5 10.5V16c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5.5" stroke-width="1.8" stroke-linecap="round"/></svg>
+          まなび
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ROUTES = [
+    {
+      id: "south",
+      name: "県南日帰り/1泊コース",
+      tag: "児島・玉野エリアを効率よく周遊",
+      price: "¥6,000〜",
+      priceValue: "¥6,000",
+      ar: ["瀬戸大橋スタンプ", "海辺スタンプ", "遊園地スタンプ"],
+      stops: [
+        { time: "8:40", stop: "JR児島駅", note: "集合・パス提示で改札通過" },
+        { time: "9:20", stop: "鷲羽山ハイランド", note: "入園券をQRで提示" },
+        { time: "13:30", stop: "おもちゃ王国", note: "路線バスに乗り継ぎ" },
+        { time: "18:00", stop: "岡山市内 宿泊", note: "1泊コースのみ" },
+      ],
+    },
+    {
+      id: "north",
+      name: "県北縦断コース",
+      tag: "岡山駅から蒜山高原まで北上",
+      price: "¥9,000〜",
+      priceValue: "¥9,000",
+      ar: ["岡山城スタンプ", "山道スタンプ", "高原スタンプ"],
+      stops: [
+        { time: "9:00", stop: "JR岡山駅", note: "高速バスに乗車" },
+        { time: "11:10", stop: "コミュニティバス まにわくん", note: "約100km北上" },
+        { time: "12:30", stop: "ジョイフルパーク", note: "蒜山高原センター内" },
+        { time: "16:40", stop: "JR岡山駅 帰着", note: "日帰り" },
+      ],
+    },
+  ];
+
+  const WORKSHOPS = [
+    { name: "防災 × 気象ワークショップ", when: "毎週土曜 11:00-12:00", desc: "気象データの読み方と避難行動を、高校生スタッフと一緒に学ぶ体験プログラム。", cap: "定員 20名" },
+    { name: "ものづくり体験教室", when: "毎週日曜 13:00-14:30", desc: "地元企業と協働した木工・工作ワークショップ。園内の廃材を使った制作体験。", cap: "定員 15名" },
+    { name: "自転車教室", when: "第2・4土曜 10:00-11:00", desc: "地元プロ選手監修の安全走行レッスン。おもちゃ王国の既存プログラムを拡張。", cap: "定員 12名" },
+  ];
+
+  let selectedRoute = ROUTES[0];
+
+  function qrPattern(seed){
+    // deterministic pseudo-random 9x9 grid with finder squares, purely decorative
+    let cells = [];
+    let s = seed;
+    const rand = () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+    for (let r = 0; r < 9; r++){
+      for (let c = 0; c < 9; c++){
+        const inFinder = (r < 3 && c < 3) || (r < 3 && c > 5) || (r > 5 && c < 3);
+        cells.push(inFinder ? ((r===1&&c===1)||(r===1&&c===7)||(r===7&&c===1) || r===0||r===2||c===0||c===2|| (c===6&&r<3)||(c===8&&r<3)||(r===6&&c<3)||(r===8&&c<3)) : rand() > 0.52);
+      }
+    }
+    return cells;
+  }
+
+  function renderQr(){
+    const grid = document.getElementById("qr-grid");
+    grid.innerHTML = "";
+    qrPattern(42).forEach(on => {
+      const i = document.createElement("i");
+      if (on) i.className = "on";
+      grid.appendChild(i);
+    });
+  }
+
+  function renderHomeRoutes(){
+    const list = document.getElementById("home-route-list");
+    list.innerHTML = "";
+    ROUTES.forEach(r => {
+      const card = document.createElement("button");
+      card.className = "route-card";
+      card.innerHTML = `
+        <div class="rc-top">
+          <span class="rc-name">${r.name}</span>
+          <span class="rc-price">${r.price}</span>
+        </div>
+        <div class="rc-path">${r.tag}</div>
+      `;
+      card.onclick = () => { selectRoute(r.id); showScreen("routes"); };
+      list.appendChild(card);
+    });
+  }
+
+  function renderRouteFull(){
+    const wrap = document.getElementById("route-full-list");
+    wrap.innerHTML = "";
+    ROUTES.forEach(r => {
+      const el = document.createElement("div");
+      el.className = "route-full";
+      el.innerHTML = `
+        <div class="rf-top">
+          <div>
+            <div class="rf-name">${r.name}</div>
+            <div class="rf-tag">${r.tag}</div>
+          </div>
+          <div class="rf-price">${r.price}</div>
+        </div>
+        <div class="ar-strip">
+          ${r.ar.map(a => `<span class="ar-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2 3 7v10l9 5 9-5V7z" stroke-width="1.8" stroke-linejoin="round"/></svg>${a}</span>`).join("")}
+        </div>
+        <button class="btn small" data-select="${r.id}">このルートを選ぶ</button>
+      `;
+      el.querySelector("[data-select]").onclick = () => { selectRoute(r.id); showScreen("pass"); };
+      wrap.appendChild(el);
+    });
+  }
+
+  function selectRoute(id){
+    selectedRoute = ROUTES.find(r => r.id === id) || ROUTES[0];
+    document.getElementById("ticket-route-name").textContent = selectedRoute.name;
+    document.getElementById("ticket-price").textContent = selectedRoute.priceValue;
+    const itin = document.getElementById("ticket-itinerary");
+    itin.innerHTML = "";
+    selectedRoute.stops.forEach((s, idx) => {
+      const row = document.createElement("div");
+      row.className = "itin-row";
+      row.innerHTML = `
+        <div class="itin-time">${s.time}</div>
+        <div class="itin-line"><div class="itin-dot"></div><div class="itin-stem"></div></div>
+        <div class="itin-body">
+          <div class="itin-stop">${s.stop}</div>
+          <div class="itin-note">${s.note}</div>
+        </div>
+      `;
+      itin.appendChild(row);
+    });
+  }
+
+  function renderWorkshops(){
+    const list = document.getElementById("ws-list");
+    list.innerHTML = "";
+    WORKSHOPS.forEach((w, i) => {
+      const key = "harepass_ws_" + i;
+      let reserved = false;
+      try { reserved = localStorage.getItem(key) === "1"; } catch(e) {}
+      const card = document.createElement("div");
+      card.className = "ws-card";
+      card.innerHTML = `
+        <div class="ws-top">
+          <div>
+            <div class="ws-name">${w.name}</div>
+            <div class="ws-when">${w.when}</div>
+          </div>
+        </div>
+        <p class="ws-desc">${w.desc}</p>
+        <div class="ws-foot">
+          <span class="ws-demand">${w.cap}</span>
+          <button class="btn small" data-i="${i}">${reserved ? "予約済み ✓" : "予約する"}</button>
+        </div>
+      `;
+      const btn = card.querySelector("button[data-i]");
+      if (reserved) btn.classList.add("ghost");
+      btn.onclick = () => {
+        let now = false;
+        try {
+          now = localStorage.getItem(key) !== "1";
+          localStorage.setItem(key, now ? "1" : "0");
+        } catch(e) { now = btn.textContent.trim() !== "予約済み ✓"; }
+        btn.textContent = now ? "予約済み ✓" : "予約する";
+        btn.classList.toggle("ghost", now);
+      };
+      list.appendChild(card);
+    });
+  }
+
+  function showScreen(name){
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById("screen-" + name).classList.add("active");
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === name ? "true" : "false"));
+    document.getElementById("screen-" + name).parentElement.scrollTop = 0;
+  }
+
+  const RAIN_ICON = '<path d="M7 15a4 4 0 0 1 .5-7.97A5.5 5.5 0 0 1 18 9.5a3.5 3.5 0 0 1-.7 6.93" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 18v2M12 18v3M16 18v2" stroke-width="1.6" stroke-linecap="round"/>';
+  const SUN_ICON = '<circle cx="12" cy="12" r="4.6" stroke-width="1.6"/><path d="M12 2.5v2.6M12 18.9v2.6M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.2 19.8L6 18M18 6l1.8-1.8" stroke-width="1.6" stroke-linecap="round"/>';
+
+  function fillWxCard(prefix, area, condition, pop, tempMax){
+    document.getElementById(`wx-${prefix}-loc`).textContent = area;
+    document.getElementById(`wx-${prefix}-temp`).textContent = `${tempMax}℃`;
+    document.getElementById(`wx-${prefix}-label`).textContent = `${pop}% ${condition}`;
+    const icon = document.getElementById(`wx-${prefix}-icon`);
+    const card = document.getElementById(`wx-${prefix}-card`);
+    const rainy = pop >= 40;
+    icon.innerHTML = rainy ? RAIN_ICON : SUN_ICON;
+    icon.style.color = rainy ? "var(--rain)" : "var(--sun-deep)";
+    card.classList.toggle("is-rain", rainy);
+    card.classList.toggle("is-sun", !rainy);
+  }
+
+  // Real snapshot from the Japan Meteorological Agency (jma.go.jp), fetched
+  // at publish time. Not live — refresh this object to update the figures.
+  const REAL_WEATHER = {
+    fetchedAt: "2026年9月16日 気象庁発表（本日予報）",
+    okayama: { area: "岡山県南部", condition: "くもり時々晴れ", pop: 20, tempMax: 29 },
+    reference: { area: "大阪府", condition: "雨のちくもり", pop: 60, tempMax: 25 },
+  };
+
+  function renderWeather(){
+    const doc = REAL_WEATHER;
+    fillWxCard("oka", doc.okayama.area, doc.okayama.condition, doc.okayama.pop, doc.okayama.tempMax);
+    fillWxCard("ref", doc.reference.area, doc.reference.condition, doc.reference.pop, doc.reference.tempMax);
+
+    document.getElementById("wx-source").textContent = `気象庁データより ${doc.fetchedAt}`;
+
+    const isSale = doc.okayama.pop < 30 && doc.reference.pop >= 40;
+    if (isSale){
+      document.getElementById("banner-headline").innerHTML = "気象連動タイムセール<br>本日開催中";
+      document.getElementById("banner-sub").textContent = `${doc.reference.area}の雨予報（降水確率${doc.reference.pop}%）を検知し、動的割引を発行中（実データ連動デモ）`;
+      document.getElementById("banner-price-now").textContent = "¥6,000〜";
+      document.getElementById("banner-price-was").textContent = "¥9,000";
+      document.getElementById("banner-price-tag").style.display = "";
+      document.getElementById("banner-price-tag").textContent = "-33%";
+    } else {
+      document.getElementById("banner-headline").innerHTML = "本日は通常価格<br>でご案内中";
+      document.getElementById("banner-sub").textContent = "近隣府県の降水確率が上がると、自動で気象連動割引が発行されます（実データ連動デモ）";
+      document.getElementById("banner-price-now").textContent = "¥9,000〜";
+      document.getElementById("banner-price-was").textContent = "";
+      document.getElementById("banner-price-tag").style.display = "none";
+    }
+  }
+
+  function start(){
+    renderQr();
+    renderHomeRoutes();
+    renderRouteFull();
+    renderWorkshops();
+    selectRoute("south");
+    renderWeather();
+  }
+
+  window.claude?.hot?.ready ? window.claude.hot.ready(start) : start();
+</script>
